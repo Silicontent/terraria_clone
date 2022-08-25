@@ -1,0 +1,59 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://assets/block_select.png" type="Texture" id=1]
+[ext_resource path="res://tilesets/GroundTiles.tres" type="TileSet" id=2]
+[ext_resource path="res://scripts/WorldGen.gd" type="Script" id=3]
+[ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://scripts/Selector.gd" type="Script" id=5]
+[ext_resource path="res://assets/light.png" type="Texture" id=6]
+
+[node name="Main" type="Node2D"]
+
+[node name="World" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 8, 8 )
+format = 1
+script = ExtResource( 3 )
+
+[node name="Selector" type="Sprite" parent="World"]
+texture = ExtResource( 1 )
+centered = false
+script = ExtResource( 5 )
+
+[node name="Light2D" type="Light2D" parent="World/Selector"]
+visible = false
+texture = ExtResource( 6 )
+texture_scale = 2.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="GenLevel" type="Button" parent="UI"]
+margin_left = 799.0
+margin_top = 477.0
+margin_right = 940.0
+margin_bottom = 521.0
+focus_mode = 0
+text = "Generate New Level"
+
+[node name="Controls" type="Label" parent="UI"]
+margin_left = 730.0
+margin_top = 417.0
+margin_right = 942.0
+margin_bottom = 465.0
+text = "O - Break
+P - Place
+Enter - Go to World Spawn"
+align = 2
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+position = Vector2( 462, -293 )
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+current = true
+zoom = Vector2( 0.4, 0.4 )
+editor_draw_limits = true
+
+[connection signal="pressed" from="UI/GenLevel" to="World" method="_on_GenLevel_pressed"]
+[connection signal="pressed" from="UI/GenLevel" to="Player" method="_on_GenLevel_pressed"]
+[connection signal="mine" from="Player" to="World" method="_on_Player_mine"]
+[connection signal="place" from="Player" to="World" method="_on_Player_place"]
