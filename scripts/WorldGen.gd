@@ -97,8 +97,8 @@ func generate_level():
 	gen_base()
 	gen_splotches()
 	gen_caves()
-	gen_surface()
-	gen_system()
+	#gen_surface()
+	#gen_system()
 
 func clear_level():
 	for x in world_x:
