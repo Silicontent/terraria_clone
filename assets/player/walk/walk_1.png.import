@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/mud.png-82c979e10e01c20c071b9b27ced16513.stex"
+path="res://.import/walk_1.png-c976b4e26ef96b12cf99ecaaaeb1db82.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/mud.png"
-dest_files=[ "res://.import/mud.png-82c979e10e01c20c071b9b27ced16513.stex" ]
+source_file="res://assets/player/walk/walk_1.png"
+dest_files=[ "res://.import/walk_1.png-c976b4e26ef96b12cf99ecaaaeb1db82.stex" ]
 
 [params]
 

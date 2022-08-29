@@ -9,6 +9,12 @@
 
 [node name="Main" type="Node2D"]
 
+[node name="BG" type="ParallaxBackground" parent="."]
+
+[node name="Surface" type="ParallaxLayer" parent="BG"]
+
+[node name="Underground" type="ParallaxLayer" parent="BG"]
+
 [node name="World" type="TileMap" parent="."]
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 8, 8 )
@@ -40,7 +46,7 @@ position = Vector2( 462, -293 )
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
-zoom = Vector2( 0.4, 0.4 )
+zoom = Vector2( 0.55, 0.55 )
 editor_draw_limits = true
 
 [connection signal="pressed" from="UI/GenLevel" to="World" method="_on_GenLevel_pressed"]
