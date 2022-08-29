@@ -28,7 +28,7 @@ func gen_base():
 
 
 func gen_splotches():
-	set_noise_prop(0, 5, 0.588, 2.43)
+	set_noise_prop(0, 5.0, 0.588, 2.43)
 	
 	for x in world_x:
 		for y in surf_y:
@@ -42,28 +42,31 @@ func gen_splotches():
 
 
 func gen_caves():
-	set_noise_prop(0, 5, 0.588, 2.43)
+	noise.seed = randi()
+	print("Cave seed: ", noise.seed)
+	set_noise_prop(0, 5.0, 0.588, 2.43)
 	
 	for x in world_x:
 		for y in ug_y:
-			var tile_id = gen_cave_id(noise.get_noise_2d(x, y))
-			set_cell(x, surf_y+y, tile_id)
+			if noise.get_noise_2d(x, y) <= -0.2:
+				set_cell(x, surf_y+y, -1)
 
 
 func gen_surface():
+	set_noise_prop(1, 6.2, 0.486, 2.0)
+	
+	for x in world_x:
+		for y in surf_y-10:
+			if noise.get_noise_2d(x, y) <= -0.1:
+				set_cell(x, 10+y, -1)
+	
 	for x in world_x:
 		var current_tile = get_cell(x, 0)
 		if current_tile != -1:
 			set_cell(x, 0, 3)
 
 
-func gen_system():
-	set_noise_prop(1, 114.2, 0.266, 0.69)
-	
-	for x in world_x:
-		for y in world_y:
-			var tile_id = gen_system_id(noise.get_noise_2d(x, y))
-			set_cell(x, y, tile_id)
+
 
 
 # functions for getting tile IDs
@@ -75,18 +78,6 @@ func gen_splotch_id(noise_level: float, splotch_tile: int, main_tile: int):
 	else:
 		return splotch_tile
 
-func gen_cave_id(noise_level: float): 
-	if noise_level <= -0.2:
-		return -1
-	else:
-		return 1
-
-func gen_system_id(noise_level: float): 
-	if noise_level <= -0.2:
-		return -1
-	else:
-		return 1
-
 
 # WORLD FUNCTIONS --------------------------------------------------------
 func generate_level():
@@ -97,15 +88,14 @@ func generate_level():
 	gen_base()
 	gen_splotches()
 	gen_caves()
-	#gen_surface()
-	#gen_system()
+	gen_surface()
 
 func clear_level():
 	for x in world_x:
 		for y in world_y:
 			set_cell(x, y, -1)
 
-func set_noise_prop(oct: int, per: int, pers: float, lac: float):
+func set_noise_prop(oct: int, per: float, pers: float, lac: float):
 	noise.octaves = oct
 	noise.period = per
 	noise.persistence = pers
