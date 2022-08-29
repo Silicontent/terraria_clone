@@ -43,7 +43,6 @@ func gen_splotches():
 
 func gen_caves():
 	noise.seed = randi()
-	print("Cave seed: ", noise.seed)
 	set_noise_prop(0, 5.0, 0.588, 2.43)
 	
 	for x in world_x:
@@ -83,7 +82,6 @@ func gen_splotch_id(noise_level: float, splotch_tile: int, main_tile: int):
 func generate_level():
 	randomize()
 	noise.seed = randi()
-	print("World seed: ", noise.seed)
 	
 	gen_base()
 	gen_splotches()
