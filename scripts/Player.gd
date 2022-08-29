@@ -9,7 +9,7 @@ const GRAV := 1000
 const ACC := 0.15
 const FRIC := 0.35
 
-var start_pos = Vector2(462, -169)
+var start_pos = Vector2(462, -10)
 var speed := 100
 var jump_speed := -300
 var velocity := Vector2.ZERO
