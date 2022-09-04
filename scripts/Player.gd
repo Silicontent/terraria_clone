@@ -2,15 +2,15 @@
 
 extends KinematicBody2D
 
-signal mine
-signal place
+signal mine(block_select)
+signal place(block_select)
 signal update_stats(h, m)
 
 const GRAV := 1000
 const ACC := 0.15
 const FRIC := 0.35
 
-var start_pos = Vector2(800, -10)
+var start_pos = Vector2(800, -15)
 var speed := 100
 var fly_speed := 200
 var jump_speed := -325
@@ -24,6 +24,7 @@ var max_mana := 200
 var is_creative := false
 
 onready var sprite: AnimatedSprite = $AnimSprite
+onready var block_select: Sprite = $Selector
 
 
 func _ready() -> void:
@@ -83,7 +84,7 @@ func _physics_process(delta):
 #	if Input.is_action_just_pressed("mb_left"):
 #		sprite.play("mine")
 	if Input.is_action_just_pressed("mb_right"):
-		emit_signal("place")
+		emit_signal("place", block_select)
 	
 	if Input.is_action_just_pressed("util_enter"):
 		to_spawn()
@@ -104,14 +105,9 @@ func change_stats(h: int, m: int):
 	mana = clamp(mana, 0, max_mana)
 	
 	emit_signal("update_stats", health, mana)
-	
-	# temporary death code
-#	if health <= 0:
-#		health = 0
-#		emit_signal("update_stats", health, mana)
-#		queue_free()
 
 
+# debug inputs to change stats
 func _input(event):
 	if event is InputEventKey and event.scancode == KEY_COMMA:
 		change_stats(-2, 0)
@@ -129,4 +125,4 @@ func _on_GenLevel_pressed():
 
 
 func _on_CopperPickaxe_mine():
-	emit_signal("mine")
+	emit_signal("mine", block_select)

@@ -10,9 +10,6 @@ var noise: OpenSimplexNoise = OpenSimplexNoise.new()
 var snap_x = 8
 var snap_y = 8
 
-onready var selector: Sprite = $Selector
-onready var mouse_light: Light2D = $Selector/Light2D
-
 
 # WORLD ELEVATION GENERATION ---------------------------------------------
 func gen_base():
@@ -40,6 +37,14 @@ func gen_splotches():
 			var tile_id = gen_splotch_id(noise.get_noise_2d(x, y), 1, 0)
 			set_cell(x, surf_y+y, tile_id)
 
+# function for getting ID of tile (used by gen_splotches)
+func gen_splotch_id(noise_level: float, splotch_tile: int, main_tile: int):
+	var tile_to_gen = splotch_tile
+	
+	if noise_level <= -0.2:
+		return main_tile
+	else:
+		return splotch_tile
 
 # originally "if noise.get_noise_2d(x, y) <= -0.2
 func gen_caves():
@@ -68,17 +73,6 @@ func gen_surface():
 
 
 
-
-# functions for getting tile IDs
-func gen_splotch_id(noise_level: float, splotch_tile: int, main_tile: int):
-	var tile_to_gen = splotch_tile
-	
-	if noise_level <= -0.2:
-		return main_tile
-	else:
-		return splotch_tile
-
-
 # WORLD FUNCTIONS --------------------------------------------------------
 func generate_level():
 	randomize()
@@ -104,7 +98,7 @@ func _on_GenLevel_pressed():
 
 
 # BREAKING / PLACING -----------------------------------------------------
-func _on_Player_mine():
+func _on_Player_mine(selector):
 	var tile: Vector2 = world_to_map(selector.mouse_pos * 8) # gets the tile we clicked on
 	var tile_id = get_cellv(tile) # returns the ID of that cell
 	
@@ -114,7 +108,7 @@ func _on_Player_mine():
 		new_id = -1
 	set_cellv(tile, new_id)
 
-func _on_Player_place():
+func _on_Player_place(selector):
 	var tile: Vector2 = world_to_map(selector.mouse_pos * 8)
 	set_cellv(tile, 2)
 
