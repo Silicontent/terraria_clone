@@ -1,7 +1,11 @@
 extends CanvasLayer
 
-onready var coords_lbl = $Coords
+onready var hearts: TextureProgress = $HealthBar
+onready var mana: TextureProgress = $ManaBar
 
 
-func _on_Player_broadcast_coords(coords):
-	coords_lbl.text = coords
+func _on_Player_update_stats(h, m):
+	hearts.value = h
+	mana.value = m
+	$TempHealth.text = str(h)
+	$TempMana.text = str(m)

@@ -1,9 +1,9 @@
 extends TileMap
 
-export(int) var world_x = 200
-export(int) var world_y = 200
-export(int) var surf_y = 20
-export(int) var ug_y = 180
+export(int) var world_x = 300  # 200
+export(int) var world_y = 300  # 200
+export(int) var surf_y = 20  # 20
+export(int) var ug_y = 280  # 180
 
 var noise: OpenSimplexNoise = OpenSimplexNoise.new()
 
@@ -41,13 +41,14 @@ func gen_splotches():
 			set_cell(x, surf_y+y, tile_id)
 
 
+# originally "if noise.get_noise_2d(x, y) <= -0.2
 func gen_caves():
 	noise.seed = randi()
 	set_noise_prop(0, 5.0, 0.588, 2.43)
 	
 	for x in world_x:
 		for y in ug_y:
-			if noise.get_noise_2d(x, y) <= -0.2:
+			if noise.get_noise_2d(x, y) <= 0.1:
 				set_cell(x, surf_y+y, -1)
 
 
@@ -88,10 +89,6 @@ func generate_level():
 	gen_caves()
 	gen_surface()
 
-func clear_level():
-	for x in world_x:
-		for y in world_y:
-			set_cell(x, y, -1)
 
 func set_noise_prop(oct: int, per: float, pers: float, lac: float):
 	noise.octaves = oct
@@ -102,7 +99,7 @@ func set_noise_prop(oct: int, per: float, pers: float, lac: float):
 
 # SIGNALS ----------------------------------------------------------------
 func _on_GenLevel_pressed():
-	clear_level()
+	self.clear()  # clears all tiles in "World"
 	generate_level()
 
 
