@@ -91,12 +91,6 @@ func set_noise_prop(oct: int, per: float, pers: float, lac: float):
 	noise.lacunarity = lac
 
 
-# SIGNALS ----------------------------------------------------------------
-func _on_GenLevel_pressed():
-	self.clear()  # clears all tiles in "World"
-	generate_level()
-
-
 # BREAKING / PLACING -----------------------------------------------------
 func _on_Player_mine(selector):
 	var tile: Vector2 = world_to_map(selector.mouse_pos * 8) # gets the tile we clicked on
