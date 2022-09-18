@@ -39,8 +39,6 @@ func gen_splotches():
 
 # function for getting ID of tile (used by gen_splotches)
 func gen_splotch_id(noise_level: float, splotch_tile: int, main_tile: int):
-	var tile_to_gen = splotch_tile
-	
 	if noise_level <= -0.2:
 		return main_tile
 	else:
@@ -89,12 +87,6 @@ func set_noise_prop(oct: int, per: float, pers: float, lac: float):
 	noise.period = per
 	noise.persistence = pers
 	noise.lacunarity = lac
-
-
-# SIGNALS ----------------------------------------------------------------
-func _on_GenLevel_pressed():
-	self.clear()  # clears all tiles in "World"
-	generate_level()
 
 
 # BREAKING / PLACING -----------------------------------------------------
