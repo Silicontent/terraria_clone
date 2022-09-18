@@ -1,4 +1,4 @@
-extends Control
+extends CanvasLayer
 
 onready var hearts: TextureProgress = $HealthBar
 onready var mana: TextureProgress = $ManaBar
@@ -7,5 +7,5 @@ onready var mana: TextureProgress = $ManaBar
 func _on_Player_update_stats(h, m):
 	hearts.value = h
 	mana.value = m
-	hearts.hint_tooltip = str(h)
-	mana.hint_tooltip = str(m)
+	$TempHealth.text = str(h)
+	$TempMana.text = str(m)

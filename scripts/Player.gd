@@ -12,22 +12,26 @@ const FRIC := 0.35
 
 var start_pos = Vector2(800, -15)
 var speed := 100
+var fly_speed := 200
+var jump_speed := -325
 var velocity := Vector2.ZERO
-var jump_speed := -325.0
 
 var health := 100
 var max_health := 100
 var mana := 20
 var max_mana := 200
 
-onready var anim_tree: AnimationTree = $AnimationTree
-onready var anim_player: AnimationPlayer = $AnimationPlayer
+var is_creative := false
+
+onready var sprite: AnimatedSprite = $AnimSprite
 onready var block_select: Sprite = $Selector
 
 
 func _ready() -> void:
 	to_spawn()
 	emit_signal("update_stats", health, mana)
+	$CollisionShape2D.disabled = false
+	is_creative = false
 
 func to_spawn():
 	global_position = start_pos
@@ -36,35 +40,60 @@ func to_spawn():
 # MOVEMENT ---------------------------------------------------------------
 func movement():
 	var dir = 0
+	var k_dir = 0
 	
 	if Input.is_action_pressed("mv_left"):
 		dir -= 1
-		$Sprite.flip_h = true
+		sprite.flip_h = true
 	if Input.is_action_pressed("mv_right"):
 		dir += 1
-		$Sprite.flip_h = false
+		sprite.flip_h = false
 	
-	if dir != 0:
+	if is_creative:
+		if Input.is_action_pressed("mv_up"):
+			k_dir -= 1
+		if Input.is_action_pressed("mv_down"):
+			k_dir += 1
+	
+	if dir != 0 or k_dir != 0:
 		velocity.x = lerp(velocity.x, dir * speed, ACC)
+		if is_creative:
+			velocity.y = lerp(velocity.y, k_dir * fly_speed, ACC)
+		
+		sprite.play("walking")
 	else:
 		velocity.x = lerp(velocity.x, 0, FRIC)
+		if is_creative:
+			velocity.y = lerp(velocity.y, 0, FRIC)
+		
+		sprite.play("idle")
 
 
 func _physics_process(delta):
 	movement()
 	
-	velocity.y += GRAV * delta
+	if is_creative == false:
+		velocity.y += GRAV * delta
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 	if Input.is_action_just_pressed("mv_jump"):
 		if is_on_floor():
 			velocity.y = jump_speed
+#			sprite.play("jump")
 	
+#	if Input.is_action_just_pressed("mb_left"):
+#		sprite.play("mine")
 	if Input.is_action_just_pressed("mb_right"):
 		emit_signal("place", block_select)
 	
 	if Input.is_action_just_pressed("util_enter"):
 		to_spawn()
+	if Input.is_action_just_pressed("util_k"):
+		is_creative = not(is_creative)
+		if is_creative:
+			$CollisionShape2D.disabled = true
+		else:
+			$CollisionShape2D.disabled = false
 
 
 # STATS ------------------------------------------------------------------
