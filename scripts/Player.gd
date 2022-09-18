@@ -25,16 +25,20 @@ var max_health := 100
 var mana := 20
 var max_mana := 200
 
-onready var sprite: Sprite = $Sprite
-onready var block_select: Sprite = $Selector
-onready var coy_timer: Timer = $CoyoteTimer
+onready var sprite = $Sprite
+onready var block_select = $Selector
+onready var coy_timer = $CoyoteTimer
+onready var anim_player = $AnimationPlayer
+onready var anim_tree = $AnimationTree
 
 
 func _ready() -> void:
 	to_spawn()
 	emit_signal("update_stats", health, mana)
+	anim_tree.active = true
 
 func to_spawn():
+	velocity = Vector2.ZERO
 	global_position = start_pos
 
 
@@ -51,8 +55,11 @@ func movement():
 	
 	if dir != 0:
 		velocity.x = lerp(velocity.x, dir * speed, ACC)
+		anim_tree.set("parameters/movement/current", 1)  # 1 = walking animation
+		anim_tree.set("parameters/move_time/scale", 1 + abs(dir)/100)
 	else:
 		velocity.x = lerp(velocity.x, 0, FRIC)
+		anim_tree.set("parameters/movement/current", 0)  # 0 = idle animation
 
 
 func vert_movement(delta):
@@ -91,20 +98,27 @@ func vert_movement(delta):
 func _physics_process(delta):
 	movement()
 	vert_movement(delta)
-	
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
+	# JUMPING
 	if Input.is_action_just_pressed("mv_jump"):
 		if grounded and is_jumping == false:
 			velocity.y = jump_speed
 			is_jumping = true
 			coy_timer.stop()
+			anim_tree.set("parameters/in_air/current", 0)  # 1 corresponds to the jump animation (could be easier to read if we replace 1 with an enum)
+	
+	if Input.is_action_just_released("mv_jump"):
+		anim_tree.set("parameters/in_air/current", 1) # 0 corresponds to falling (same as jump, can be optimized)
 	
 	if Input.is_action_just_pressed("mb_right"):
 		emit_signal("place", block_select)
 	
 	if Input.is_action_just_pressed("util_enter"):
 		to_spawn()
+	
+	# final animation things
+	anim_tree.set("parameters/in_air_state/current", int(!$RayCast2D.is_colliding()))
 
 
 # STATS ------------------------------------------------------------------
