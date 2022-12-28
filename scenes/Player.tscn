@@ -145,7 +145,7 @@ nodes/movement/position = Vector2( 220, 20 )
 nodes/output/position = Vector2( 680, 160 )
 nodes/walk/node = SubResource( 11 )
 nodes/walk/position = Vector2( -160, 160 )
-node_connections = [ "output", 0, "in_air_state", "movement", 0, "idle", "movement", 1, "move_time", "in_air", 0, "fall", "in_air", 1, "jump", "in_air_state", 0, "movement", "in_air_state", 1, "in_air", "move_time", 0, "walk" ]
+node_connections = [ "movement", 0, "idle", "movement", 1, "move_time", "in_air", 0, "fall", "in_air", 1, "jump", "move_time", 0, "walk", "in_air_state", 0, "movement", "in_air_state", 1, "in_air", "output", 0, "in_air_state" ]
 
 [node name="Player" type="KinematicBody2D"]
 collision_mask = 126
